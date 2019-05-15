@@ -2,7 +2,7 @@ import numpy as np
 import cmath
 import davidson
 import mat_utils as util
-
+import plot_tools as pt
 
 def main():
     # define dimensions of the array
@@ -24,5 +24,6 @@ def main():
     print "\n q "
     print (q_scalar)
 
+    pt.plot_matrix(x_mat)
 main()
 
