@@ -1,6 +1,9 @@
 import numpy as np
 import cmath
 
+#generate random array
+def generate_random_vector( vec_length):
+    return np.random.random_sample((vec_length,))
 
 # generates a real random matrix with nrows and ncols
 def generate_random_matrix(nrows, ncols):
@@ -25,6 +28,12 @@ def generate_random_symmetric_matrix(nrows, ncols):
 def diag(mat):
     return np.linalg.eig(mat)
 
-def multiply(mat_in, vec_in):
-    return np.mat_mult(mat_in, vec_in)
 
+# matrix multiplication, will work either with matrices or matrix vectors
+def multiply(mat_in, vec_in):
+    return np.matmul(mat_in, vec_in)
+
+
+# dot product
+def dot(vec_in1, vec_in2):
+    return np.linalg.dot(vec_in1, vec_in2)

@@ -5,17 +5,24 @@ import mat_utils as util
 
 
 def main():
-    mat = util.generate_random_symmetric_matrix(5,5)
-    new_mat = util.symmetrize_mat(mat)
-    eigvals, eigvecs =  util.diag( new_mat )
+    # define dimensions of the array
+    nrows = 5
+    ncols = 5
+    x_mat = util.generate_random_matrix(nrows, ncols)  # type: List[int]
+    print ("x")
+    print (x_mat)
 
-    print (mat)
-    print "\n"
-    x = util.generate_random_matrix(5,1)  # type: List[int]
-    print (x)
-    print "\n"
-    y = np.matmul(mat, x)
-    print (y)
+    y_vec = util.generate_random_vector(ncols)
+    print "\n y \n"
+    print (y_vec)
+
+    z_vec = util.multiply(x_mat, y_vec)
+    print "\n z \n"
+    print (z_vec)
+
+    q_scalar = util.multiply(y_vec,z_vec)
+    print "\n q "
+    print (q_scalar)
 
 main()
 
