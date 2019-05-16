@@ -1,6 +1,6 @@
 import numpy as np
 import cmath
-import davidson
+import davidson as dv
 import mat_utils as util
 import plot_tools as pt
 import matplotlib.pyplot as plt
@@ -39,7 +39,7 @@ def main():
     print "sub_mat \n"
     print sub_mat
 
-
+    dv.solve(x_mat)
 
 main()
 

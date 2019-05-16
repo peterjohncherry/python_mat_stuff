@@ -42,9 +42,18 @@ def dot(vec_in1, vec_in2):
 def norm(array_in):
     return np.linalg.norm(array_in)
 
+
+#get sub matrix, note zero indexing
 def get_sub_matrix( mat_in, top_row, bottom_row, left_column, right_column):
-    return mat_in[np.ix_(range(top_row, bottom_row), range(left_column, right_column))]
+    return mat_in[np.ix_(range(top_row, bottom_row+1), range(left_column, right_column+1))]
 
-
+#get sub matrix, takes ranges as inputs, note zero indexing
 def get_sub_matrix( mat_in, row_range, col_range):
     return mat_in[np.ix_(row_range, col_range)]
+
+#normalizes vector, but will return original vector if norm is 0
+def normalize( vec_in ):
+    my_norm = norm(vec_in)
+    if my_norm == 0:
+        return vec_in
+    return vec_in/(my_norm)
