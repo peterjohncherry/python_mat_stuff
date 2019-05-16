@@ -3,6 +3,8 @@ import cmath
 import davidson
 import mat_utils as util
 import plot_tools as pt
+import matplotlib.pyplot as plt
+
 
 def main():
     # define dimensions of the array
@@ -24,6 +26,13 @@ def main():
     print "\n q "
     print (q_scalar)
 
-    pt.plot_matrix(x_mat)
+    mat_plots = pt.Matrix_Images('x_mat')
+    mat_plots.add_plot(x_mat)
+    x_mat_symm = util.symmetrize_mat(x_mat)
+    mat_plots.add_plot(x_mat_symm)
+    mat_plots.save_imgs()
+
+
+
 main()
 
