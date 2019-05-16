@@ -17,7 +17,6 @@ def symmetrize_mat(mat):
     new_mat = mat / 2 + mat.transpose() / 2
     return new_mat
 
-
 # generates a real random matrix with nrows and ncols
 def generate_random_symmetric_matrix(nrows, ncols):
     # type: (int, int) -> matrix
@@ -37,3 +36,15 @@ def multiply(mat_in, vec_in):
 # dot product
 def dot(vec_in1, vec_in2):
     return np.linalg.dot(vec_in1, vec_in2)
+
+
+#get the Frobenius norm
+def norm(array_in):
+    return np.linalg.norm(array_in)
+
+def get_sub_matrix( mat_in, top_row, bottom_row, left_column, right_column):
+    return mat_in[np.ix_(range(top_row, bottom_row), range(left_column, right_column))]
+
+
+def get_sub_matrix( mat_in, row_range, col_range):
+    return mat_in[np.ix_(row_range, col_range)]
