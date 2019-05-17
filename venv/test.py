@@ -35,7 +35,7 @@ def main():
     mat_plots.add_plot(x_mat_symm)
     mat_plots.save_imgs()
 
-    sub_mat = util.get_sub_matrix(x_mat, range(2,3+1), range(4,5+1))
+    sub_mat = util.get_sub_matrix(x_mat, range(2, 3+1), range(4, 5+1))
     print "sub_mat \n"
     print sub_mat
 

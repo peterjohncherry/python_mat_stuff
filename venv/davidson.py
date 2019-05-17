@@ -5,7 +5,6 @@ import mat_utils as util
 #crappy guess vector obtained by slicing row and normalizing
 def get_guess_vec(mat_in, ii):
     nrows = mat_in.shape[0]
-    print ("nrows in guess vec = " + str(nrows) + "\n")
     return util.normalize(mat_in[ii,0:]).reshape(nrows, 1)
 
 # Davidson algorithm
@@ -15,11 +14,17 @@ def get_guess_vec(mat_in, ii):
 def solve(AA):
     uu = []
     ww = []
-    for ii in range(AA.shape[0]):
-        uu.append(get_guess_vec(AA,ii))
-        ww.append(util.multiply(AA, uu))
-        print " uu["+str(ii) + "] \n", uu[ii], "\n"
-        print " ww["+str(ii) + "] \n", ww[ii], "\n"
-
+    BB = np.array([[0.0]])
+    print ("AA.shape = ", AA.shape[0] )
+    for jj in range(AA.shape[0]):
+        print (jj)
+        uu.append(get_guess_vec(AA, jj))
+        ww.append(util.multiply(AA, uu[jj]))
+        print "jj = " +str(jj) + "\n"
+        for kk in range(0, jj):
+            BB[kk][jj] = util.dot(uu[kk], ww[jj])
+            BB[jj][kk] = util.dot(uu[jj], ww[kk])
+        BB_tmp = np.array(np.r_['-1', BB, np.zeros((BB.shape[1], 1))])
+        BB = np.array(np.r_['0', BB_tmp, np.zeros((1, BB_tmp.shape[1]))])
 
 

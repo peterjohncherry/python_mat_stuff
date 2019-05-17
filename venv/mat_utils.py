@@ -35,7 +35,7 @@ def multiply(mat_in, vec_in):
 
 # dot product
 def dot(vec_in1, vec_in2):
-    return np.linalg.dot(vec_in1, vec_in2)
+    return np.vdot(vec_in1, vec_in2)
 
 
 #get the Frobenius norm
