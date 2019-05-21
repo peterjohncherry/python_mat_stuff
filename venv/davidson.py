@@ -17,17 +17,16 @@ def solve(AA):
     ww = np.array(util.multiply(uu, AA))
 
     print "ww", ww
-    BB = np.array([ util.dot(uu, ww) ])                                 # b[j][j] = (u[j]|w[j])
+    BB = np.array([ util.dot(uu, ww) ])                                 # b[j][j] = (ujwj)
     for jj in range(AA.shape[0]):
         if jj != 0 :
             uu = np.r_['0', uu, np.array([get_guess_vec(AA,jj)])]
-            print ("uu = ", uu)
-            print ""
-            ww = util.multiply(AA, uu.transpose())                     #w[j] = A * u[j]
-            print ("ww = ", ww)
+            ww = util.multiply(AA, uu.transpose())                     #wj = A * uj
             BB = util.multiply(ww, uu)
-            print "BB = ", BB
             eigvals, eigvecs = util.diag(BB)
-            print eigvecs, eigvals
-            ss = eigvecs[np.argmax(eigvals),:].transpose()
-            print "ss = ", ss
+            max_index = np.argmax(eigvals)
+
+            #yy =  util.multiply(uu, eigvecs[max_index,:].transpose()) #Y = uj max(eigvecs[B])
+            #print "yy = ", yy
+            #rr = util.multiply(AA, yy.transpose())
+                 #- eigvals[max_index] * yy
