@@ -4,7 +4,7 @@ import davidson as dv
 import mat_utils as util
 import plot_tools as pt
 import matplotlib.pyplot as plt
-
+import read_mat
 
 def main():
     # define dimensions of the array
@@ -13,6 +13,7 @@ def main():
     x_mat = util.generate_random_matrix(nrows, ncols)  # type: List[int]
 
     dv.solve(x_mat)
+    print read_mat.text_to_float('/home/peter/MISC/mat_file')
 
 main()
 
