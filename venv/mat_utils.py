@@ -10,8 +10,7 @@ def generate_random_matrix(nrows, ncols):
     # type: (int, int) -> matrix
     return np.random.rand(nrows, ncols)
 
-
-# symmetrizes matrix so it diagonalizes nice like
+# symmetrizes matrix
 def symmetrize_mat(mat):
     # type : (numpy.matrix) -> numpy.matrix
     new_mat = mat / 2 + mat.transpose() / 2
@@ -22,26 +21,30 @@ def generate_random_symmetric_matrix(nrows, ncols):
     # type: (int, int) -> matrix
     return symmetrize_mat(np.random.rand(nrows, ncols))
 
+#Scales down off diagonal elements to make matrix amenable to solution by Davidson
+def make_diagonally_dominant(mat_in) :
+    mat_out = mat_in
+    for ii in range(np.size(mat_in,0)):
+        for jj in range(np.size(mat_in, 1)):
+            if ii != jj:
+                mat_out[ii,jj] = mat_in[ii,jj]/(1000**abs(ii-jj))
+    return mat_out
 
 # diagonalizes a matrix directly
 def diag(mat):
     return np.linalg.eig(mat)
 
-
 # matrix multiplication, will work either with matrices or matrix vectors
 def multiply(mat_in, vec_in):
     return np.matmul(mat_in, vec_in)
-
 
 # dot product
 def dot(vec_in1, vec_in2):
     return np.vdot(vec_in1, vec_in2)
 
-
 #get the Frobenius norm
 def norm(array_in):
     return np.linalg.norm(array_in)
-
 
 #get sub matrix, note zero indexing
 def get_sub_matrix( mat_in, top_row, bottom_row, left_column, right_column):

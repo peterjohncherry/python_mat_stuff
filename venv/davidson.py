@@ -13,10 +13,10 @@ def get_guess_vec(mat_in, ii):
 # ww is the list of vectors defined by AA.uu[j]
 def solve(AA):
     uu = np.array([get_guess_vec(AA,0)])
-    print "uu", uu
+    print ("uu", uu)
     ww = np.array(util.multiply(uu, AA))
 
-    print "ww", ww
+    print ("ww", ww)
     BB = np.array([ util.dot(uu, ww) ])                                 # b[j][j] = (ujwj)
     for jj in range(AA.shape[0]):
         if jj != 0 :
