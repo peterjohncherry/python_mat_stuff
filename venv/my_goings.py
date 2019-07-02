@@ -1,19 +1,35 @@
 import numpy as np
 
+def mat_sections():
+    A = np.zeros((4,4))
+    for i in range(4):
+        for j in range(4):
+            A[i,j]= (i+1)*10+j+1
+
+
+    B = np.array([1,2,3,4,5])
+    print("A = \n", A )
+    print ("A[:2,:2] = \n", A[:2,:2])
+
+    print ( "B = \n", B)
+    print("B[:3] = \n", B[:3])
+
+
 def my_goings():
-    #ne = 1200  # Dimension of matrix
-    #tol = 1e-8  # Convergence tolerance
+
+    tol = 1e-8  # Convergence tolerance
     maxit = 30
 
-    ne = 4
+    ne = 1200
     sparsity  = 0.000001
     A = np.zeros((ne,ne))
     for i in range (0,ne):
         A[i,i] = i+1
+
     A = A+sparsity*np.random.randn(ne,ne)
     A = (A.T +A)/2
 
-    ngv =8 # number of guess vectors
+    ngvecs =8 # number of guess vectors
     eig = 4 # number of eigenvalues to solve
     gvecs = np.eye(ne,ngvecs) # set of ngv unit vectors as guess
     V = np.zeros((ne,ne))# array of zeros to hold guess
@@ -22,10 +38,10 @@ def my_goings():
 
     x = range(ngvecs, maxit)
     for mm in range ( ngvecs, maxit, ngvecs):
-        if mm == ngvecs : #check if first iteration
-            for jj in range (0,ngvecs): # build up initial guess vectors
-                V[:, j] = gvecs[:,jj]/np.linalg.norm(t[:,jj])
-            theta_old = 1 # arbitrary value for initial eigenvalue for comparison
+        if mm == ngvecs :                # check if first iteration
+            for jj in range (0,ngvecs):  # build up initial guess vectors
+                V[ :, jj] = gvecs[:,jj]/np.linalg.norm(gvecs[:,jj])
+            theta_old = 1                # arbitrary value for initial eigenvalue for comparison
 
         elif mm > ngvecs : # if not first iteration, set theta_old to eigvals from last iteration
             theta_old = theta[:eig]
@@ -35,9 +51,30 @@ def my_goings():
         V, R = np.linalg.qr(V)
 
         # project matrix A onto subspace defined by new guess vectors V
-        VT = V[:,:(m+1)].T
-        AV = np.(A,V[:,:(m+1)])
-        T = np.dot(VT, AV)
+        VT = V[ :, :(mm+1)].T
+        AV = np.dot( A , V[ :, :(mm+1)])
+        VTAV = np.dot(VT, AV)
 
-        THETA, S =`
+        #
+        THETA, S = np.linalg.eig(VTAV)
+        idx = THETA.argsort()
+        theta = THETA[idx]
+        s = S[:, idx]
 
+        for jj in range (0,ngvecs):
+            Vs = np.dot(V[ :, :(mm+1) ], s[ :, jj] )
+            AmI =A-theta[jj]*I
+            ww = np.dot(AmI, Vs)
+            qq = ww/(theta[jj]- A[jj,jj])
+            V[:, (mm+jj+1)] = qq
+        norm = np.linalg.norm(theta[:eig]-theta_old)
+        if norm < tol:
+            break
+
+    print ("davidson results = ", theta[:eig])
+
+    E, Vec = np.linalg.eig(A)
+    E = np.sort(E)
+    print ("numpy results = ", E[:eig])
+
+    mat_sections()
