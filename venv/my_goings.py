@@ -21,7 +21,7 @@ def my_goings():
     maxit = 30
 
     ne = 1200
-    sparsity  = 0.000001
+    sparsity = 0.000001
     A = np.zeros((ne,ne))
     for i in range (0,ne):
         A[i,i] = i+1
@@ -55,20 +55,21 @@ def my_goings():
         AV = np.dot( A , V[ :, :(mm+1)])
         VTAV = np.dot(VT, AV)
 
-        #
+        #Get eigenvectors and eigenvalues and sort them
         THETA, S = np.linalg.eig(VTAV)
         idx = THETA.argsort()
         theta = THETA[idx]
         s = S[:, idx]
 
+        #  calculate residual and new vector, Extend search space, check convergence
         for jj in range (0,ngvecs):
-            Vs = np.dot(V[ :, :(mm+1) ], s[ :, jj] )
-            AmI =A-theta[jj]*I
-            ww = np.dot(AmI, Vs)
-            qq = ww/(theta[jj]- A[jj,jj])
-            V[:, (mm+jj+1)] = qq
-        norm = np.linalg.norm(theta[:eig]-theta_old)
-        if norm < tol:
+            uj = np.dot( V[ :, :(mm+1) ], s[ :, jj] ) # V.sj
+            AmtI =A-theta[jj]*I                       # (A-I.theta)
+            rj = np.dot(AmtI, uj)                     #  rj = (A.uj -theta.uj)
+            tj = rj/(theta[jj]- A[jj,jj])             # get t from (DA.uj -theta.uj)tj = rj ; DA is diagonal of A
+            V[:, (mm+jj+1)] = tj                      # Add this tj to search space
+        norm = np.linalg.norm(theta[:eig]-theta_old)  # Calculate change from eigvals on last iteration
+        if norm < tol:                                # Check convergence
             break
 
     print ("davidson results = ", theta[:eig])
@@ -77,4 +78,4 @@ def my_goings():
     E = np.sort(E)
     print ("numpy results = ", E[:eig])
 
-    mat_sections()
+   # mat_sections()
