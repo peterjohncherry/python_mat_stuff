@@ -22,7 +22,7 @@ def test_jacobi_davidson():
     tol = 1e-8  # Convergence tolerance
     maxit = 30
 
-    ne = 1200
+    ne = 10
     sparsity = 0.000001
     A = np.zeros((ne, ne))
     for i in range(0, ne):
