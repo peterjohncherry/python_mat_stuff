@@ -1,5 +1,13 @@
 import numpy as np
 
+def build_H(v_vecs, w_vecs):
+    ne = np.size(v_vecs, 1)
+    H = np.ndarray((ne, ne))
+    for ii in range(np.size(v_vecs, 1)):
+        for jj in range(np.size(w_vecs, 1)):
+            H[ii, jj] = v_vecs[:, ii].dot(w_vecs[:, jj])
+    return H
+
 def jacobi_davidson(A, num_eig, thresh, max_it ):
 
     ne = np.size(A,0)
@@ -23,6 +31,11 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
         print ("v_vecs[:,",ii,"]", v_vecs[:,ii] )
         print("w_vecs[:,", ii, "]", w_vecs[:, ii])
 
+    u = v_vecs[:,0]
+
+    H = build_H(v_vecs, w_vecs)
+    theta = H[0,0]
+    print ("theta = ", theta)
 
     V = np.zeros((ne,ne))# array of zeros to hold guess
     I = np.eye(ne) #identity matrix of same dimension as A
