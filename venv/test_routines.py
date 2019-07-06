@@ -23,14 +23,14 @@ def test_jacobi_davidson():
     maxit = 30
 
     ne = 10
-    sparsity = 0.000001
+    sparsity = 0.001
     A = np.zeros((ne, ne))
     for i in range(0, ne):
         A[i, i] = i + 1
 
     A = A + sparsity * np.random.randn(ne, ne)
     A = (A.T + A) / 2
-    eig = 4  # number of eigenvalues to solve
+    eig = 2  # number of eigenvalues to solve
     jd.jacobi_davidson(A, eig, tol, maxit)
 
 def test_reader():
