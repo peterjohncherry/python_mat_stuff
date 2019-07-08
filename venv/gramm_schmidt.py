@@ -43,4 +43,32 @@ def gs_full(V):
 ###########################################################################
 #Modified Gramm-Schmidt algorithms
 ###########################################################################
+def modified_gs_full(X):
+    V = X
+    Q = np.zeros(np.shape(V))
+    ncols = np.size(V, 1)
+    jj = 0
+    while jj < ncols :
+        Q[:,jj]= V[:,jj]/np.dot(V[:,jj],V[:,jj])
+        kk = jj+1
+        while kk < ncols:
+            V[:,kk] = V[:,kk]- np.dot(Q[:,jj],V[:,kk])*Q[:,jj]
+            kk += 1
+        jj+=1
+    return V
 
+def modified_gs_full_2(X):
+    V = X
+    Q = np.zeros_like(V)
+    ncols = np.size(V, 1)
+    ii = 0
+    while ii < ncols :
+        rii = np.sqrt(np.dot(V[:,ii], V[:,ii]))
+        Q[:,ii] = V[:,ii]/rii
+        jj = ii
+        while jj < ncols:
+            rij = np.dot(Q[:,ii], V[:,jj])
+            V[:,jj] = V[:,jj]-rij*Q[:,ii]
+            jj +=1
+        ii+=1
+    return Q

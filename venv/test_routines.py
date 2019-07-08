@@ -70,3 +70,10 @@ def test_gramm_schmidt():
     U = gs.gs_full(A)
     util.check_column_orthogonality(U)
 
+    ne = 6
+    X = np.random.randn(ne, ne - 1)
+    for i in range(0, ne - 1):
+        X[i, i] = 0
+        X[i + 1, i] = 0
+    V = gs.modified_gs_full_2(X)
+    util.check_column_orthogonality(V, name ="V")
