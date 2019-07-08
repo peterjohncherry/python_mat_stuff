@@ -75,5 +75,5 @@ def test_gramm_schmidt():
     for i in range(0, ne - 1):
         X[i, i] = 0
         X[i + 1, i] = 0
-    V = gs.modified_gs_full_2(X)
+    V = gs.modified_gs_full(X)
     util.check_column_orthogonality(V, name ="V")
