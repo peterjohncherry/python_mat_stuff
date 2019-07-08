@@ -65,9 +65,9 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
     approx_type = "diag(A)"
     diff = 100000
     iter = 1
-    max_it =4
+    max_it = 5
     #2. Iterate until convergence
-    while iter < max_it and diff > thresh  :
+    while iter < max_it  and diff > thresh  :
         #diff = thresh
         #3. Inner Loop
         M = build_M(A, u_vecs, thetas, approx_type)
@@ -76,14 +76,14 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
         t = gs.gs_one_vec(v_vecs, t)
         t = np.reshape(t,(ne,1))
         if iter == 1:
-            v_vecs[:,ii] = t
-            w_vecs[:,ii] = np.matmul(A,t)
+            v_vecs = t
+            w_vecs = np.matmul(A,t)
         else:
-            v_vecs.append(t,axis=1)
+            v_vecs = np.append(v_vecs, t,axis=1)
             v_vecs.reshape((ne,iter))
-            w_vecs.append(np.matmul(A,t))
+            w_vecs = np.append(w_vecs, np.matmul(A,t), axis =1 )
             v_vecs.reshape((ne, iter))
-
+        iter += 1
         print ("w_vecs = \n", w_vecs)
 
         diff += 1
