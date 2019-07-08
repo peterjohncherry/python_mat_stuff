@@ -2,6 +2,7 @@ import davidson as dv
 import jacobi_davidson as jd
 import mat_utils as util
 import numpy as np
+import gramm_schmidt as gs
 
 def test_davidson():
     tol = 1e-8  # Convergence tolerance
@@ -50,3 +51,15 @@ def test_solver():
     x_mat_scaled = util.make_diagonally_dominant(util.generate_random_symmetric_matrix(nrows, ncols))
     print('x_mat_scaled \n', x_mat_scaled)
     dv.solve(x_mat_scaled)
+
+def test_gramm_schmidt():
+    ne = 6
+    t = np.ones((6))
+    A = np.random.randn(ne, ne-1)
+    for i in range(0, ne-1):
+        A[i, i] = 0
+        A[i+1, i] = 0
+
+    U = gs.gs_full(A)
+    util.check_column_orthogonality(U)
+

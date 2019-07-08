@@ -60,3 +60,15 @@ def normalize( vec_in ):
     if my_norm == 0:
         return vec_in
     return vec_in/(my_norm)
+
+#checks whether the columns of A are orthogonal to one another
+def check_column_orthogonality(A, thresh = 0.000000001, name="???"):
+    ncols = np.size(A,1)
+    for jj in range(ncols):
+        for ii in range(ncols-1):
+            if ii != jj :
+                self_dot =  np.abs(np.dot(A[:,jj],A[:,ii]))
+                if self_dot > thresh :
+                    print("A[:,",jj,"] dot A[:,",ii,"] = ", self_dot)
+                    print ("ORTHOGONALIZATION OF", name, "FAILED!!")
+                    return

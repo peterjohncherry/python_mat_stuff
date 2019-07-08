@@ -10,7 +10,8 @@ import test_routines as tests
 
 def main():
     #tests.test_davidson()
-    tests.test_jacobi_davidson()
+    tests.test_gramm_schmidt()
+    #tests.test_jacobi_davidson()
 
 main()
 

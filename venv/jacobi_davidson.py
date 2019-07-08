@@ -1,4 +1,5 @@
 import numpy as np
+import gramm_schmidt as gs
 
 def build_H(v_vecs, w_vecs):
     ne = np.size(v_vecs, 1)
@@ -47,7 +48,7 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
         ngvecs = num_eig
 
     v_vecs = np.eye(ne, ngvecs) # set of ngv unit vectors as guess
-    w_vecs = np.zeros((ne, ngvecs))  # set of ngv unit vectors as guess
+    w_vecs = np.zeros((ne, ngvecs)) # w[i] = Av[i]
 
     for ii in range(ngvecs):
         w_vecs[:,ii] = A.dot(v_vecs[:,ii])
@@ -72,7 +73,10 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
         M = build_M(A, u_vecs, thetas, approx_type)
         print("M = \n", M)
 
-
         Minv = np.linalg.inv(M)
+        print ("np.matmul(Minv, M) \n",np.matmul(Minv, M))
         t = np.matmul(np.linalg.inv(M), r)
         print ("t = ", t)
+
+        t = gs.gs_one_vec(v_vecs, t)
+        print("t = \n", t)
