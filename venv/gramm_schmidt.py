@@ -1,10 +1,11 @@
 import numpy as np
+import mat_utils as util
 
 #THESE ALL ASSUME VECTORS ARE IN COLUMNS!!!!
 
 # proj_{u}(v) = [(v|u)/(u|u)]*u
 def proj_op(u,v):
-    return ((v.dot(u))/ (u.dot(u)))*u
+    return ((v.dot(u))/(u.dot(u)))*u
 
 ###########################################################################
 #Unmodified Gramm-Schmidt algorithms
@@ -12,17 +13,18 @@ def proj_op(u,v):
 #orthogonalizes u with respect to V
 def gs_one_vec(V,u):
     new_u = u
-    print("u = " , u )
-    for ii in range(np.size(V,1)):
-        new_u -= proj_op(u,V[:,ii])
-        print("new_u = ", new_u)
+    ncols = np.size(V,1)
+    for ii in range(ncols):
+        new_u = new_u - proj_op(V[:, ii], new_u)
     return new_u
 
 def gs_one_vec_bad_v(V,u):
-    new_u = u
     X = V
     gs_full(X)
-    gs_one_vec(X, u)
+    util.check_column_orthogonality(X, name = "bob")
+    print("u = ", u)
+    new_u = gs_one_vec(X, u)
+    print("new_u = ", new_u)
     return new_u
 
 #orthogonalizes u with respect to V
@@ -35,9 +37,10 @@ def gs_full(V):
         while jj < kk:
             tmp = tmp - proj_op(U[:, jj], V[:, kk])
             jj += 1
-        U[:,kk] = tmp
+        U[:, kk] = tmp
     return U
 
 ###########################################################################
 #Modified Gramm-Schmidt algorithms
 ###########################################################################
+

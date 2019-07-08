@@ -60,6 +60,13 @@ def test_gramm_schmidt():
         A[i, i] = 0
         A[i+1, i] = 0
 
+    u = gs.gs_one_vec_bad_v(A, t)
+    util.check_column_orthogonality_u(A, u)
+
+    A = np.random.randn(ne, ne - 1)
+    for i in range(0, ne - 1):
+        A[i, i] = 0
+        A[i + 1, i] = 0
     U = gs.gs_full(A)
     util.check_column_orthogonality(U)
 

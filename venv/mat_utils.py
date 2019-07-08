@@ -72,3 +72,13 @@ def check_column_orthogonality(A, thresh = 0.000000001, name="???"):
                     print("A[:,",jj,"] dot A[:,",ii,"] = ", self_dot)
                     print ("ORTHOGONALIZATION OF", name, "FAILED!!")
                     return
+
+#checks whether the columns of A are orthogonal to one another
+def check_column_orthogonality_u(A, u, thresh = 0.000000001, name="???"):
+    ncols = np.size(A,1)
+    for jj in range(ncols):
+        self_dot = np.abs(np.dot(A[:,jj],u))
+        if self_dot > thresh :
+            print("u dot A[:,",jj,"] = ", self_dot)
+            print ("ORTHOGONALIZATION OF", name, "FAILED!!")
+            return
