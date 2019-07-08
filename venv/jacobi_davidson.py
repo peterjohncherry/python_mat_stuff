@@ -47,13 +47,11 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
     else:
         ngvecs = num_eig
 
-    v_vecs = np.eye(ne, ngvecs) # set of ngv unit vectors as guess
-    w_vecs = np.zeros((ne, ngvecs)) # w[i] = Av[i]
+    v_vecs = np.eye(ne, 1) # set of ngv unit vectors as guess
+    w_vecs = np.zeros((ne, 1)) # w[i] = Av[i]
 
-    for ii in range(ngvecs):
+    for ii in range(1):
         w_vecs[:,ii] = A.dot(v_vecs[:,ii])
-
-    print ("w_vecs[:,0] = ", w_vecs[:,0])
 
     u_vecs = v_vecs
 
@@ -62,21 +60,32 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
     thetas[0] = H[0,0]
 
     r = w_vecs[:,0] - thetas[0]*u_vecs[:,0]
-    print( "r = ",  r)
     diff = 2* thresh
 
     approx_type = "diag(A)"
+    diff = 100000
+    iter = 1
+    max_it =4
     #2. Iterate until convergence
-    while diff > thresh :
-        diff = thresh
+    while iter < max_it and diff > thresh  :
+        #diff = thresh
         #3. Inner Loop
         M = build_M(A, u_vecs, thetas, approx_type)
-        print("M = \n", M)
-
         Minv = np.linalg.inv(M)
-        print ("np.matmul(Minv, M) \n",np.matmul(Minv, M))
         t = np.matmul(np.linalg.inv(M), r)
-        print ("t = ", t)
-
         t = gs.gs_one_vec(v_vecs, t)
-        print("t = \n", t)
+        t = np.reshape(t,(ne,1))
+        if iter == 1:
+            v_vecs[:,ii] = t
+            w_vecs[:,ii] = np.matmul(A,t)
+        else:
+            v_vecs.append(t,axis=1)
+            v_vecs.reshape((ne,iter))
+            w_vecs.append(np.matmul(A,t))
+            v_vecs.reshape((ne, iter))
+
+        print ("w_vecs = \n", w_vecs)
+
+        diff += 1
+
+       # w[:,kk]
