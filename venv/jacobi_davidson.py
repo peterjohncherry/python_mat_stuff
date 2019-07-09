@@ -49,6 +49,7 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
 
     v_vecs = np.eye(ne, 1) # set of ngv unit vectors as guess
     w_vecs = np.zeros((ne, 1)) # w[i] = Av[i]
+    uhat_vecs = np.zeros((ne, 1))  # w[i] = Av[i]
 
     for ii in range(1):
         w_vecs[:,ii] = A.dot(v_vecs[:,ii])
@@ -56,28 +57,26 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
     H = build_H(v_vecs, w_vecs)
     thetas = np.ndarray((ngvecs))
     thetas[0] = H[0,0]
-    ritz_vecs = v_vecs
-    r = w_vecs[:,0] - thetas[0]*ritz_vecs[:,0]
-    diff = 2* thresh
+    ritz_vec = v_vecs[:,0]
+    residual_vec = w_vecs[:,0] - thetas[0]*ritz_vec
 
     approx_type = "diag(A)"
     diff = 100000
-    iter = 0
+    iter = 1
+
     #2. Iterate until convergence
     while iter < max_it and diff > thresh:
         #3. Inner Loop
-        M = build_M(A, ritz_vecs, thetas, approx_type)
-        t = np.matmul(np.linalg.inv(M), r)
+        M = build_M(A, ritz_vec, thetas, approx_type)
+        t = np.matmul(np.linalg.inv(M), residual_vec)
         t = gs.gs_one_vec(v_vecs, t)
         t = np.reshape(t,(ne,1))
-        if iter == 0:
-            v_vecs = t
-            w_vecs = np.matmul(A,t)
-        else:
-            v_vecs = np.append(v_vecs, t, axis=1)
-            v_vecs.reshape((ne, iter+1))
-            w_vecs = np.append(w_vecs, np.matmul(A,t), axis =1)
-            w_vecs.reshape((ne, iter+1))
+
+
+        v_vecs = np.append(v_vecs, t, axis=1)
+        v_vecs.reshape((ne, iter+1))
+        w_vecs = np.append(w_vecs, np.matmul(A,t), axis =1)
+        w_vecs.reshape((ne, iter+1))
 
         H = np.matmul(v_vecs.transpose(), w_vecs)
 
@@ -88,66 +87,27 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
         s_vecs = s_vecs[:, idx]
 
 
-        new_ritz_vec = np.matmul(v_vecs, s_vecs[:,iter])
-        new_uhat_vec = np.matmul(A, new_ritz_vec)
-        new_ritz_vec.reshape((ne, 1))
-        new_uhat_vec.reshape((ne, 1))
-        if iter == 0:
-            ritz_vecs = new_ritz_vec
-            uhat_vecs = np.matmul(A, new_ritz_vec)
-        else:
-            ritz_vecs = np.append(ritz_vecs, new_ritz_vec, axis=1)
-            uhat_vecs = np.append(uhat_vecs, new_uhat_vec, axis=1)
+        ritz_vec = np.matmul(v_vecs, s_vecs[:,iter])
+        uhat_vec = np.matmul(A, ritz_vec)
+        residual_vec = uhat_vec+-thetas[0]*ritz_vec
 
-        ritz_vecs.reshape((ne, iter+1))
-        uhat_vecs.reshape((ne, iter+1))
-        print("np.shape(ritz_vecs) = ", np.shape(ritz_vecs))
-        print("np.shape(uhat_vecs) = ", np.shape(uhat_vecs))
+        residual_norm = np.linalg.norm(residual_vec)
 
-
-        #ritz_vecs = np.append(ritz_vecs, new_ritz_vec, axis=1)
-        #ritz_vecs.reshape((ne, iter))
-        #ritz_vecs = np.matmul(v_vecs, s_vecs)
-        #uhat_vecs = np.matmul(A, ritz_vecs)
-
-        residual_vecs = np.empty_like(uhat_vecs)
-        print("np.shape(residual_vecs) = ", np.shape(residual_vecs))
-        residual_norms = []
-        if iter == 0 :
-            residual_vecs = -thetas* ritz_vecs
-            residual_vecs = residual_vecs + uhat_vecs
-        else:
-            for ii in range(iter):
-                residual_vecs[:,ii] = -thetas[ii]*ritz_vecs[:,ii]
-                residual_vecs[:,ii] = residual_vecs[:,ii]+uhat_vecs[:,ii]
-
-        if iter+1 > num_eig :
-            num_residuals = num_eig
-        else :
-            num_residuals = iter+1
-
-        residual_norms = []
-        if iter == 0 :
-            residual_norms.append(abs(np.dot(residual_vecs, residual_vecs)))
-        else:
-            for ii in range(num_residuals) :
-                residual_norms.append(abs(np.dot(residual_vecs[:, ii], residual_vecs[:, ii])))
 
         print ("iter = ", iter)
-        print ("residual_norms = ", residual_norms)
 
-        diff = max(residual_norms)
-        if diff > thresh :
-            print ("diff > thresh  :: ", diff , ">", thresh, " -----> Not yet converged")
-            v_vecs = ritz_vecs
-            w_vecs = uhat_vecs
+        if residual_norm > thresh :
+            print ("||r||> thresh  :: ", residual_norm, ">", thresh, " -----> Not yet converged")
+            v_vecs[:,0] = ritz_vec
+            w_vecs[:,0] = uhat_vec
             H = np.diag(np.diag(thetas))
 #            print("H \n", H)
         else:
-            print("diff <= thresh  :: ", diff, "<=", thresh, " -----> Converged!")
+            print("||r|| <= thresh  :: ", residual_norm, "<=", thresh, " -----> Converged!")
+            print ("thetas = ", thetas)
+            break
         iter += 1
 
-        #residual_vecs = residual_vecs - uhat_vecs
 
 
 
