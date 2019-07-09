@@ -25,12 +25,19 @@ def test_jacobi_davidson():
 
     ne = 10
     sparsity = 0.001
+
     A = np.zeros((ne, ne))
     for i in range(0, ne):
-        A[i, i] = i + 1
+        A[i, i] = (i + 1)
 
-    A = A + sparsity * np.random.randn(ne, ne)
+    for ii in range(0, ne):
+        A[ii, ii] = ii+1
+        for jj in range(0, ne):
+            if ii != jj:
+                A[ii, jj] = np.random.normal() * np.power(sparsity, ii+1)
+
     A = (A.T + A) / 2
+    print("A \n", A)
     eig = 2  # number of eigenvalues to solve
     jd.jacobi_davidson(A, eig, tol, maxit)
 
