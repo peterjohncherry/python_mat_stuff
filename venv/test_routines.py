@@ -24,7 +24,7 @@ def test_jacobi_davidson():
     maxit = 30
 
     ne = 10
-    sparsity = 0.001
+    sparsity = 0.1
 
     A = np.zeros((ne, ne))
     for i in range(0, ne):
@@ -37,9 +37,14 @@ def test_jacobi_davidson():
                 A[ii, jj] = np.random.normal() * np.power(sparsity, ii+1)
 
     A = (A.T + A) / 2
-    print("A \n", A)
+
+    eigvals, eigvecs = np.linalg.eig(A)
+    print("eigvals = \n", eigvals)
+    print("eigvecs = \n", eigvecs)
     eig = 2  # number of eigenvalues to solve
     jd.jacobi_davidson(A, eig, tol, maxit)
+
+
 
 def test_reader():
     print (read_mat.text_to_float('/home/peter/MISC/mat_file'))
