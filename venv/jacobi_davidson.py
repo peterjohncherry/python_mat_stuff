@@ -83,9 +83,46 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
             v_vecs.reshape((ne,iter))
             w_vecs = np.append(w_vecs, np.matmul(A,t), axis =1 )
             v_vecs.reshape((ne, iter))
-        iter += 1
+
         print ("w_vecs = \n", w_vecs)
 
-        diff += 1
+        H = np.matmul(v_vecs.transpose(), w_vecs)
+        print ("H \n ", H)
 
-       # w[:,kk]
+        # get eig vals and eigvecs of new H and sort
+        thetas, s_vecs = np.linalg.eig(H)
+        idx = thetas.argsort()[::-1]
+        thetas = thetas[idx]
+        s_vecs = s_vecs[:, idx]
+
+        ritz_vecs = np.matmul(w_vecs, s_vecs)
+        print ("shape(ritz_vecs) = ", np.shape(ritz_vecs))
+        uhat_vecs = np.matmul(A,ritz_vecs)
+        print("shape(uhat_vecs) = ", np.shape(uhat_vecs))
+        print("shape(thetas) = ", np.shape(thetas))
+
+        residual_vecs = np.empty_like(uhat_vecs)
+        residual_norms = []
+        print ("iter = ", iter)
+        for ii in range(iter):
+            residual_vecs[:,ii] = -thetas[ii]*ritz_vecs[:,ii]
+            residual_vecs[:,ii] = residual_vecs[:,ii]+uhat_vecs[:,ii]
+
+        for ii in range(iter) :
+            residual_norms.append(np.dot(residual_vecs[:, ii], residual_vecs[:, ii]))
+
+        print ("residual_norms = ", residual_norms)
+        diff = max(residual_norms)
+        if diff > thresh :
+            print ("diff > thresh  :: ", diff , ">", thresh, " -----> Not yet converged")
+        else:
+            print("diff <= thresh  :: ", diff, "<=", thresh, " -----> Converged!")
+        iter += 1
+
+
+
+        #residual_vecs = residual_vecs - uhat_vecs
+
+
+
+
