@@ -21,7 +21,7 @@ def test_davidson():
 
 def test_jacobi_davidson():
     tol = 1e-8  # Convergence tolerance
-    maxit = 30
+    maxit = 5
 
     ne = 10
     sparsity = 0.1
@@ -43,8 +43,6 @@ def test_jacobi_davidson():
     print("eigvecs = \n", eigvecs)
     eig = 2  # number of eigenvalues to solve
     jd.jacobi_davidson(A, eig, tol, maxit)
-
-
 
 def test_reader():
     print (read_mat.text_to_float('/home/peter/MISC/mat_file'))
@@ -89,3 +87,23 @@ def test_gramm_schmidt():
         X[i + 1, i] = 0
     V = gs.modified_gs_full(X)
     util.check_column_orthogonality(V, name ="V")
+
+def test_mgs_one_vec():
+    ne = 6
+    t = np.ones((6))
+    A = np.random.randn(ne, ne - 1)
+    for i in range(0, ne - 1):
+        A[i, i] = 0
+        A[i + 1, i] = 0
+
+    A = gs.modified_gs_full(A)
+    util.check_column_orthogonality(A, name ="A")
+
+    t = gs.modified_gs_one_vec(A,t)
+    print ("A = \n", A)
+    print("t = ", t)
+
+    util.check_column_orthogonality_u(A, t, thresh=0.000000001, name="t with A")
+
+
+

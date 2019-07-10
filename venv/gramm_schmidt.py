@@ -22,9 +22,7 @@ def gs_one_vec_bad_v(V,u):
     X = V
     gs_full(X)
     util.check_column_orthogonality(X, name = "bob")
-    print("u = ", u)
     new_u = gs_one_vec(X, u)
-    print("new_u = ", new_u)
     return new_u
 
 #orthogonalizes u with respect to V
@@ -59,3 +57,15 @@ def modified_gs_full(X):
             jj +=1
         ii+=1
     return Q
+
+def modified_gs_one_vec(X,u):
+    V = X
+    ncols = np.size(V, 1)
+    rii = np.sqrt(np.dot(u, u))
+    q = u/rii
+    jj = 0
+    while jj < ncols:
+        rij = np.dot(q, V[:,jj])
+        q = q - rij*V[:,jj]
+        jj +=1
+    return q
