@@ -49,6 +49,7 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
         ngvecs = num_eig
 
     v_vecs = np.eye(ne, 1) # set of ngv unit vectors as guess
+    print ("v_vecs = ", v_vecs)
     w_vecs = np.zeros((ne, 1)) # w[i] = Av[i]
 
     for ii in range(1):
@@ -66,13 +67,14 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
 
     #2. Iterate until convergence
     while iter < max_it and residual_norm > thresh:
+        print  ( "\n\n iter = ", iter )
         #3. Inner Loop
         M = build_M(A, ritz_vec, thetas, approx_type)
-        t = np.matmul(np.linalg.inv(M), residual_vec)
-        t = gs.modified_gs_full_one_vec(v_vecs, t)
+
+        t = np.matmul(np.linalg.inv(M), -residual_vec)
+        t = gs.modified_gs_one_vec(v_vecs, t)
         t = np.reshape(t,(ne,1))
 
-        util.check_column_orthogonality_u(v_vecs, t, thresh=0.000000001, name="t and V")
         v_vecs = np.append(v_vecs, t, axis=1)
         v_vecs.reshape((ne, iter+1))
         v_vecs = gs.modified_gs_full(v_vecs)
@@ -89,6 +91,7 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
         thetas = thetas[idx]
         s_vecs = s_vecs[:, idx]
         print("thetas = ", thetas)
+        print ("s_vecs = ", s_vecs)
 
         ritz_vec = np.matmul(v_vecs, s_vecs[:,0])
         uhat_vec = np.matmul(A, ritz_vec)
@@ -96,12 +99,12 @@ def jacobi_davidson(A, num_eig, thresh, max_it ):
 
         residual_norm = np.linalg.norm(residual_vec)
 
-        print ("iter = ", iter)
-
         if residual_norm > thresh :
             print ("||r||> thresh  :: ", residual_norm, ">", thresh, " -----> Not yet converged")
-            v_vecs[:,iter] = ritz_vec
-            w_vecs[:,iter] = uhat_vec
+           # v_vecs[:,0] = ritz_vec
+           # w_vecs[:,0] = uhat_vec
+           # v_vecs = gs.modified_gs_full(v_vecs)
+           # w_vecs = gs.modified_gs_full(w_vecs)
         else:
             print("||r|| <= thresh  :: ", residual_norm, "<=", thresh, " -----> Converged!")
             print ("thetas = ", thetas)

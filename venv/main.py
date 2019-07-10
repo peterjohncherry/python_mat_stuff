@@ -9,8 +9,8 @@ import test_routines as tests
 
 
 def main():
-    tests.test_mgs_one_vec()
-
+    #tests.test_mgs_one_vec()
+    tests.test_jacobi_davidson()
 main()
 
 

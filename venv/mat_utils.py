@@ -1,5 +1,6 @@
 import numpy as np
 import cmath
+import sys
 
 #generate random array
 def generate_random_vector( vec_length):
@@ -70,7 +71,7 @@ def check_column_orthogonality(A, thresh = 0.000000001, name="???"):
                 self_dot =  np.abs(np.dot(A[:,jj],A[:,ii]))
                 if self_dot > thresh :
                     print("A[:,",jj,"] dot A[:,",ii,"] = ", self_dot)
-                    print ("ORTHOGONALIZATION OF", name, "FAILED!!")
+                    sys.exit("ORTHOGONALIZATION OF " + name + " FAILED!!")
                     return
 
 #checks whether the columns of A are orthogonal to one another
@@ -80,5 +81,5 @@ def check_column_orthogonality_u(A, u, thresh = 0.000000001, name="???"):
         self_dot = np.abs(np.dot(A[:,jj],u))
         if self_dot > thresh :
             print("u dot A[:,",jj,"] = ", self_dot)
-            print ("ORTHOGONALIZATION OF", name, "FAILED!!")
+            sys.exit("ORTHOGONALIZATION OF " + name + " FAILED!!")
             return

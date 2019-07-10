@@ -4,6 +4,7 @@ import mat_utils as util
 import numpy as np
 import gramm_schmidt as gs
 
+
 def test_davidson():
     tol = 1e-8  # Convergence tolerance
     maxit = 30
@@ -31,12 +32,13 @@ def test_jacobi_davidson():
         A[i, i] = (i + 1)
 
     for ii in range(0, ne):
-        A[ii, ii] = ii+1
+        A[ii, ii] = ii
         for jj in range(0, ne):
             if ii != jj:
                 A[ii, jj] = np.random.normal() * np.power(sparsity, ii+1)
 
     A = (A.T + A) / 2
+    print("A = \n", A)
 
     eigvals, eigvecs = np.linalg.eig(A)
     print("eigvals = \n", eigvals)
